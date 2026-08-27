@@ -22,7 +22,9 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    die('Database connection failed.');
+    http_response_code(500);
+    echo '<html><body style="font-family: Arial; padding: 40px; text-align: center;"><h1>Database Connection Error</h1><p style="color: red;">Cannot connect to the database. Please ensure the database service is linked and environment variables are set correctly in Dokploy.</p><p style="color: #666; font-size: 12px;">Error: ' . htmlspecialchars($e->getMessage()) . '</p></body></html>';
+    exit;
 }
 
 $search = trim($_GET['search'] ?? '');

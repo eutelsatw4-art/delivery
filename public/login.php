@@ -35,7 +35,8 @@ try {
         $stmt->execute(['admin', md5('admin')]);
     }
 } catch (\PDOException $e) {
-    die('Database connection failed.');
+            echo '<html><body style="font-family: Arial; padding: 40px; text-align: center;"><h1>Database Connection Error</h1><p style="color: red;">Cannot connect to database. Please check database credentials in Dokploy environment variables.</p></body></html>';
+        exit;
 }
 
 $error = '';

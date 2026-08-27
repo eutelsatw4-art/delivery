@@ -35,7 +35,8 @@ try {
         $stmt->execute(['admin', md5('admin')]);
     }
 } catch (\PDOException $e) {
-    die('Database setup failed: ' . $e->getMessage());
+    echo '<html><body style="font-family: Arial; padding: 40px; text-align: center;"><h1>Database Setup Error</h1><p style="color: red;">' . htmlspecialchars($e->getMessage()) . '</p><p style="color: #666;">Please ensure the database service is linked and environment variables are set correctly in Dokploy.</p></body></html>';
+    exit;
 }
 ?>
 <!DOCTYPE html>

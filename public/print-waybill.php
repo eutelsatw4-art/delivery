@@ -1,11 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
+// Database Connection Configuration
 $host = getenv('DB_HOST') ?: 'localhost';
 $db   = getenv('DB_NAME') ?: 'delivery';
 $user = getenv('DB_USER') ?: 'root';
@@ -22,25 +16,26 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    die('Database connection failed.');
-}
-
-$noteNumber = $_GET['note'] ?? '';
-$noteNumber = preg_replace('/[^A-Za-z0-9\-]/', '', $noteNumber);
-
-if (!$noteNumber) {
-    header('Location: index.php');
+    http_response_code(500);
+    echo '<html><body style="font-family: Arial; padding: 40px; text-align: center;"><h1>Database Connection Error</h1><p style="color: red;">Cannot connect to the database. Please ensure the database service is linked and environment variables are set correctly in Dokploy.</p><p style="color: #666; font-size: 12px;">Error: ' . htmlspecialchars($e->getMessage()) . '</p></body></html>';
     exit;
 }
 
+// Get the delivery note number from the URL
+$noteNumber = $_GET['note'] ?? 'DN-2026-0891';
+$noteNumber = preg_replace('/[^A-Za-z0-9\-]/', '', $noteNumber);
+
+// Fetch Header Details
 $stmt = $pdo->prepare('SELECT * FROM delivery_notes WHERE note_number = ?');
 $stmt->execute([$noteNumber]);
 $deliveryNote = $stmt->fetch();
 
 if (!$deliveryNote) {
-    die('Delivery Note not found.');
+    http_response_code(404);
+    exit('Delivery Note not found.');
 }
 
+// Fetch Item Lines
 $itemStmt = $pdo->prepare('SELECT * FROM delivery_note_items WHERE delivery_note_id = ?');
 $itemStmt->execute([$deliveryNote['id']]);
 $items = $itemStmt->fetchAll();
@@ -50,7 +45,7 @@ $items = $itemStmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Delivery Note - <?= htmlspecialchars($deliveryNote['note_number']) ?></title>
+    <title>Delivery Note & Waybill - <?= htmlspecialchars($deliveryNote['note_number']) ?></title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -79,6 +74,24 @@ $items = $itemStmt->fetchAll();
             border-bottom: 3px solid #1a73e8;
             flex-wrap: wrap;
             gap: 15px;
+        }
+        .brand {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: #1a73e8;
+            color: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
         }
         .brand h1 {
             margin: 0;
@@ -170,6 +183,9 @@ $items = $itemStmt->fetchAll();
         table tbody tr:nth-child(even) {
             background: #fafafa;
         }
+        table tbody tr:hover {
+            background: #f0f4ff;
+        }
         .signatures {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -187,17 +203,23 @@ $items = $itemStmt->fetchAll();
             letter-spacing: 0.5px;
             min-height: 60px;
         }
+        .sig-line {
+            border-top: 1px solid #333;
+            margin-top: 40px;
+            padding-top: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #555;
+            text-align: center;
+        }
         .actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
+            text-align: center;
             padding-top: 20px;
             border-top: 1px dashed #ccc;
-            flex-wrap: wrap;
         }
         .btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 28px;
             background: #1a73e8;
             color: #fff;
             border: none;
@@ -215,22 +237,35 @@ $items = $itemStmt->fetchAll();
             background: #fff;
             color: #333;
             border: 1px solid #ccc;
+            margin-left: 10px;
         }
         .btn-secondary:hover {
             background: #f5f5f5;
         }
-        .btn-warning {
-            background: #ff9800;
-        }
-        .btn-warning:hover {
-            background: #e68900;
-        }
         @media print {
-            body { background: #fff; padding: 0; }
-            .page { box-shadow: none; border-radius: 0; padding: 20px; max-width: 100%; }
-            .actions { display: none !important; }
-            table thead th { background: #ddd !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            @page { margin: 15mm; }
+            body {
+                background: #fff;
+                padding: 0;
+                font-size: 12px;
+            }
+            .page {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20px;
+                max-width: 100%;
+            }
+            .actions, .no-print {
+                display: none !important;
+            }
+            table thead th {
+                background: #ddd !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            @page {
+                margin: 15mm;
+            }
         }
         @media (max-width: 640px) {
             .page { padding: 20px; }
@@ -245,9 +280,11 @@ $items = $itemStmt->fetchAll();
     <div class="page">
         <div class="top-bar">
             <div class="brand">
+                <div class="brand-icon">CDG</div>
                 <div>
                     <h1>COPPER, DIAMOND, AND GOLD WAREHOUSE</h1>
-                    <p>SHAFA, DEI-DEI, ABUJA</p>
+                    <p>SHAFA, DEI-DEI</p>
+                    <p>ABUJA</p>
                 </div>
             </div>
             <div class="doc-title">
@@ -285,7 +322,7 @@ $items = $itemStmt->fetchAll();
                 <tbody>
                     <?php if (empty($items)): ?>
                         <tr>
-                            <td colspan="4" style="text-align: center; color: #999; padding: 20px;">No items found.</td>
+                            <td colspan="4" style="text-align: center; color: #999; padding: 20px;">No items found for this delivery note.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($items as $index => $item): ?>
@@ -307,10 +344,9 @@ $items = $itemStmt->fetchAll();
             <div class="sig-box">Security</div>
         </div>
 
-        <div class="actions">
-            <a href="print-waybill.php?note=<?= urlencode($deliveryNote['note_number']) ?>" class="btn" target="_blank">Print</a>
-            <a href="edit-waybill.php?note=<?= urlencode($deliveryNote['note_number']) ?>" class="btn btn-warning">Edit</a>
-            <a href="index.php" class="btn btn-secondary">Back to Records</a>
+        <div class="actions no-print">
+            <button class="btn" onclick="window.print()">Print Waybill / Delivery Note</button>
+            <button class="btn btn-secondary" onclick="window.history.back()">Go Back</button>
         </div>
     </div>
 </body>
