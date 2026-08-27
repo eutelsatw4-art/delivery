@@ -1,0 +1,10 @@
+# Hide sensitive or local-only files
+*.log
+*.env
+.htaccess
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+node_modules/
+vendor/
