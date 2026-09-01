@@ -246,6 +246,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             justify-content: center;
             margin-top: 30px;
         }
+        .fab-menu {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .fab-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(26,115,232,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .fab-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(26,115,232,0.5);
+        }
+        .fab-items {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .fab-items.show {
+            display: flex;
+        }
+        .fab-item {
+            padding: 10px 18px;
+            background: #fff;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: #333;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+        .fab-item:hover {
+            transform: translateX(-5px);
+            background: #f0f4ff;
+        }
+        .fab-item.view { border-left: 3px solid #1a73e8; }
+        .fab-item.print { border-left: 3px solid #28a745; }
+        .fab-item.edit { border-left: 3px solid #ff9800; }
         .alert {
             padding: 15px 20px;
             border-radius: 6px;
@@ -362,11 +415,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
+    <div class="fab-menu">
+        <div class="fab-items" id="fabItems">
+            <a href="view-waybill.php?note=<?= urlencode($noteNumber) ?>" class="fab-item view">View</a>
+            <a href="print-waybill.php?note=<?= urlencode($noteNumber) ?>" class="fab-item print" target="_blank">Print</a>
+            <a href="index.php" class="fab-item edit">All Records</a>
+        </div>
+        <button class="fab-btn" onclick="toggleFab()">+</button>
+    </div>
+
     <script>
-        function addItem() {
-            const container = document.getElementById('items-container');
-            const row = document.createElement('div');
-            row.className = 'item-row';
+        function toggleFab() {
+            document.getElementById('fabItems').classList.toggle('show');
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.fab-menu')) {
+                document.getElementById('fabItems').classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
             row.innerHTML = `
                 <input type="text" name="product_name[]" placeholder="Product name" required>
                 <input type="text" name="product_sku[]" placeholder="Model / SKU" required>

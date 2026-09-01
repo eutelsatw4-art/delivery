@@ -241,6 +241,59 @@ $items = $itemStmt->fetchAll();
             .top-bar { flex-direction: column; align-items: flex-start; gap: 15px; }
             .doc-title { text-align: left; }
         }
+        .fab-menu {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .fab-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(26,115,232,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .fab-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(26,115,232,0.5);
+        }
+        .fab-items {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .fab-items.show {
+            display: flex;
+        }
+        .fab-item {
+            padding: 10px 18px;
+            background: #fff;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: #333;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+        .fab-item:hover {
+            transform: translateX(-5px);
+            background: #f0f4ff;
+        }
+        .fab-item.view { border-left: 3px solid #1a73e8; }
+        .fab-item.print { border-left: 3px solid #28a745; }
+        .fab-item.edit { border-left: 3px solid #ff9800; }
     </style>
 </head>
 <body>
@@ -317,5 +370,25 @@ $items = $itemStmt->fetchAll();
             <a href="index.php" class="btn btn-secondary">Back to Records</a>
         </div>
     </div>
+
+    <div class="fab-menu">
+        <div class="fab-items" id="fabItems">
+            <a href="print-waybill.php?note=<?= urlencode($deliveryNote['note_number']) ?>" class="fab-item print" target="_blank">Print</a>
+            <a href="edit-waybill.php?note=<?= urlencode($deliveryNote['note_number']) ?>" class="fab-item edit">Edit</a>
+            <a href="index.php" class="fab-item view">All Records</a>
+        </div>
+        <button class="fab-btn" onclick="toggleFab()">+</button>
+    </div>
+
+    <script>
+        function toggleFab() {
+            document.getElementById('fabItems').classList.toggle('show');
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.fab-menu')) {
+                document.getElementById('fabItems').classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>
