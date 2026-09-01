@@ -159,19 +159,19 @@ if ($search !== '') {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            z-index: 1000;
+            z-index: 99999;
         }
         .fab-btn {
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: #1a73e8;
             color: #fff;
-            border: none;
+            border: 3px solid #fff;
             cursor: pointer;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(26,115,232,0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .fab-btn:hover {
             transform: scale(1.1);
@@ -271,12 +271,17 @@ if ($search !== '') {
             <a href="index.php" class="fab-item print">All Records</a>
             <a href="logout.php" class="fab-item edit">Logout</a>
         </div>
-        <button class="fab-btn" onclick="toggleFab()">+</button>
+        <button class="fab-btn" onclick="toggleFab()" title="Quick Menu">+</button>
     </div>
 
     <script>
         function toggleFab() {
-            document.getElementById('fabItems').classList.toggle('show');
+            var items = document.getElementById('fabItems');
+            if (items.classList.contains('show')) {
+                items.classList.remove('show');
+            } else {
+                items.classList.add('show');
+            }
         }
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.fab-menu')) {
