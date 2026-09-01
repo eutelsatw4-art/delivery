@@ -255,6 +255,50 @@ if (isset($_SESSION['success_note'])) {
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        .fab-menu {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99999;
+        }
+        .fab-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: #fff;
+            border: 3px solid #fff;
+            cursor: pointer;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .fab-items {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .fab-items.show {
+            display: flex;
+        }
+        .fab-item {
+            padding: 10px 18px;
+            background: #fff;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: #333;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .fab-item.view { border-left: 3px solid #1a73e8; }
+        .fab-item.print { border-left: 3px solid #28a745; }
+        .fab-item.edit { border-left: 3px solid #ff9800; }
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .items-header, .item-row { grid-template-columns: 1fr 1fr; }
@@ -345,7 +389,28 @@ if (isset($_SESSION['success_note'])) {
         </form>
     </div>
 
+    <div class="fab-menu">
+        <div class="fab-items" id="fabItems">
+            <a href="index.php" class="fab-item view">All Records</a>
+            <a href="logout.php" class="fab-item edit">Logout</a>
+        </div>
+        <button class="fab-btn" onclick="toggleFab()" title="Quick Menu">+</button>
+    </div>
+
     <script>
+        function toggleFab() {
+            var items = document.getElementById('fabItems');
+            if (items.classList.contains('show')) {
+                items.classList.remove('show');
+            } else {
+                items.classList.add('show');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.fab-menu')) {
+                document.getElementById('fabItems').classList.remove('show');
+            }
+        });
         function addItem() {
             const container = document.getElementById('items-container');
             const row = document.createElement('div');
@@ -359,7 +424,6 @@ if (isset($_SESSION['success_note'])) {
             `;
             container.appendChild(row);
         }
-
         function removeItem(btn) {
             const container = document.getElementById('items-container');
             if (container.children.length > 1) {
