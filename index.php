@@ -208,6 +208,7 @@ if ($search !== '') {
         .fab-item.view { border-left: 3px solid #1a73e8; }
         .fab-item.print { border-left: 3px solid #28a745; }
         .fab-item.edit { border-left: 3px solid #ff9800; }
+        @media (max-width: 768px) {
             .top-bar { flex-direction: column; align-items: stretch; }
             .search-box { width: 100%; }
             .search-box input { flex: 1; }
