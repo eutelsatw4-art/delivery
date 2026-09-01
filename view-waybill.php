@@ -248,8 +248,10 @@ $items = $itemStmt->fetchAll();
         <div class="top-bar">
             <div class="brand">
                 <div>
-                    <h1>COPPER, DIAMOND, AND GOLD WAREHOUSE</h1>
-                    <p>SHAFA, DEI-DEI, ABUJA</p>
+                    <h1>HOMES & CO.</h1>
+                    <p style="font-weight: bold; margin: 4px 0;">COPPER, DIAMOND, AND GOLD WAREHOUSE</p>
+                    <p>SHAFA, DEI-DEI</p>
+                    <p>ABUJA</p>
                 </div>
             </div>
             <div class="doc-title">

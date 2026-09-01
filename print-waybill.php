@@ -282,7 +282,8 @@ $items = $itemStmt->fetchAll();
             <div class="brand">
                 <div class="brand-icon">CDG</div>
                 <div>
-                    <h1>COPPER, DIAMOND, AND GOLD WAREHOUSE</h1>
+                    <h1>HOMES & CO.</h1>
+                    <p style="font-weight: bold; margin: 4px 0;">COPPER, DIAMOND, AND GOLD WAREHOUSE</p>
                     <p>SHAFA, DEI-DEI</p>
                     <p>ABUJA</p>
                 </div>
