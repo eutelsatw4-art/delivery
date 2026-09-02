@@ -82,6 +82,18 @@ $items = $itemStmt->fetchAll();
             flex-wrap: wrap;
             gap: 15px;
         }
+        .brand {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .brand-logo {
+            height: 42px;
+            width: auto;
+            max-width: 120px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
         .brand h1 {
             margin: 0;
             font-size: 20px;
@@ -300,6 +312,7 @@ $items = $itemStmt->fetchAll();
     <div class="page">
         <div class="top-bar">
             <div class="brand">
+                <img src="images/logo.png" alt="HOMES & CO." class="brand-logo">
                 <div>
                     <h1>HOMES & CO.</h1>
                     <p style="font-weight: bold; margin: 4px 0;">COPPER, DIAMOND, AND GOLD WAREHOUSE</p>
