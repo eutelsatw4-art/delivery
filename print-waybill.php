@@ -286,8 +286,10 @@ $items = $itemStmt->fetchAll();
 <body>
     <div class="page">
         <div class="top-bar">
-            <div class="brand" style="text-align: center;">
-                <img src="images/logo.png" alt="Logo" class="brand-logo" style="display: block; margin: 0 auto 10px;">
+            <div>
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <img src="images/logo.png" alt="Logo" class="brand-logo">
+                </div>
                 <div>
                     <h1>COPPER, DIAMOND, AND GOLD WAREHOUSE</h1>
                     <p>SHAFA, DEI-DEI</p>
