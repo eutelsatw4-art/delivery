@@ -287,10 +287,9 @@ $items = $itemStmt->fetchAll();
     <div class="page">
         <div class="top-bar">
             <div class="brand">
-                <img src="images/logo.png" alt="HOMES & CO." class="brand-logo">
+                <img src="images/logo.png" alt="Logo" class="brand-logo">
                 <div>
-                    <h1>HOMES & CO.</h1>
-                    <p style="font-weight: bold; margin: 4px 0;">COPPER, DIAMOND, AND GOLD WAREHOUSE</p>
+                    <h1>COPPER, DIAMOND, AND GOLD WAREHOUSE</h1>
                     <p>SHAFA, DEI-DEI</p>
                     <p>ABUJA</p>
                 </div>
